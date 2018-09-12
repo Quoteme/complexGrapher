@@ -20,6 +20,9 @@
             #colorCanvas{
                 display: none;
             }
+            #from, #to, #step, #restrictTop, #restrictBtm{
+                width: 50px;
+            }
         </style>
         <script src="math.min.js" charset="utf-8"></script>
         <script src="math_extensions.js" charset="utf-8"></script>
@@ -30,12 +33,19 @@
         <div id="controls">
             <span>f(z)=<input id="f" type="text" value="z^2"></span>
             <br>
-            from:<input type="number" id="from" value="-5" style="width:50px"> to:<input type="number" id="to" value="5" style="width:50px"> step:<input id="step" type="number" value="0.3" step="0.1" style="width:50px">
+            from:<input type="number" id="from" value="-5"> to:<input type="number" id="to" value="5"> step:<input id="step" type="number" value="0.3" step="0.1">
             <br>
             <button type="button" id="renderButton" onclick="renderButtonClicked();">render</button><input id="switched" type="checkbox">switch imaginary and real</input>
             <br>
             scalerZ: <input id="scalerZ" type="range" min="1" max="100" onchange="scalerChanged();" value="1"><br> <button type="button" onclick="resetScaler();">reset</button> <span id="scalerShow">1</span>
-            ~ <i>2018.08-Luca Leon Happel</i>
+            <br>
+            restrict Z: <input type="checkbox" id="restrictZ"> Top:<input id="restrictTop" type="number" value="150"> Bottom:<input id="restrictBtm" type="number" value="-150">
+            <br>
+            gridX: <input type="checkbox" id="gridX" onclick="gridbutton();" checked>
+            gridY: <input type="checkbox" id="gridY" onclick="gridbutton();" checked>
+            gridZ: <input type="checkbox" id="gridZ" onclick="gridbutton();" checked>
+            <br>
+            <i>2018.08-Luca Leon Happel</i>
         </div>
         <!-- use this canvas to visualize the complex values of the function as colors | not visible for endusers-->
         <canvas id="colorCanvas" width="300" height="300"></canvas>

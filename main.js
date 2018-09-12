@@ -1,14 +1,14 @@
 var scaler = 1;
 var c = document.getElementById("colorCanvas");
 var ctx = c.getContext("2d");
-var camera, scene, renderer, plane;
+var camera, scene, renderer, plane, gridX, gridY, gridZ;
 var mesh;
-
+var orthoscaler = 3;
 init();
 animate();
 
 function init() {
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+    camera = new THREE.OrthographicCamera( window.innerWidth / - orthoscaler, window.innerWidth / orthoscaler, window.innerHeight / orthoscaler, window.innerHeight / - orthoscaler, 1, 1000 )
     camera.position.z = 125;
     camera.position.y = 75;
     scene = new THREE.Scene();
@@ -66,11 +66,30 @@ function evalFunction(f,p) {
     for (var i = 0; i < totalSteps; i++) {
         results[i] = new Array();
         for (var j = 0; j < totalSteps; j++) {
-            var ti = i*step+from;
-            var tj = j*step+from;
-            // replace the parameter of the function passed in as "f" with a number
-            var tmp = f.replace(p,"("+ti+"+"+tj+"i"+")");
-            var res = math.eval(tmp);
+            var ti = i*step+from+step;
+            var tj = j*step+from+step;
+            // check if the function is a "special" function, which uses functions presently not availeable in math.js
+            if (f.indexOf("riemannZeta")!=-1) {
+                var tmp = math.riemannZeta(math.complex(ti,tj),100)
+                var res = tmp;
+                // console.log(math.complex(ti,tj),res);
+            }else {
+                // functions that can be calculated using math.js are passed in here
+                // replace the parameter of the function passed in as "f" with a number
+                var tmp = f.replace(p,"("+ti+"+"+tj+"i"+")");
+                var res = math.eval(tmp);
+            }
+            // restrict the height of the graph, if the user defined so
+            if (document.getElementById("restrictZ").checked) {
+                var rtop = parseFloat(document.getElementById("restrictTop").value);
+                var rbtm = parseFloat(document.getElementById("restrictBtm").value);
+                if (res.re > rtop || res.re < rbtm ) {
+                    res.re = 100*math.sign(res.re);
+                }
+                if (res.im > rtop || res.im < rbtm) {
+                    res.im = 100*math.sign(res.im);
+                }
+            }
             // find highest and lowest points
             if (res.re > extremes.re.top) {
                 extremes.re.top = res.re;
@@ -88,7 +107,7 @@ function evalFunction(f,p) {
     return [results,extremes];
 }
 function display(e) {
-    console.log(e[1]);
+    console.log("Maxima & Minima: ",e[1]);
     var from = parseFloat(document.getElementById("from").value);
     var to = parseFloat(document.getElementById("to").value);
     var step = parseFloat(document.getElementById("step").value);
@@ -96,6 +115,9 @@ function display(e) {
     //
     // remove any previous meshes/plots of functions
     scene.remove(plane);
+    scene.remove(gridX);
+    scene.remove(gridY);
+    scene.remove(gridZ);
     //
     // create a new mesh to plot the function to
     var geometry = new THREE.PlaneGeometry( 100, 100, totalSteps-1, totalSteps-1);
@@ -107,7 +129,7 @@ function display(e) {
     // move the plane vertecies depending on their complex values
     for (var i = 0; i < plane.geometry.vertices.length; i++) {
         // console.log(i, math.floor(i/totalSteps), i%totalSteps, totalSteps);
-        plane.geometry.vertices[i].z = e[0][math.floor(i/totalSteps)][i%totalSteps].v[document.getElementById("switched").checked?"im":"re"] * scaler;
+        plane.geometry.vertices[i].z = e[0][math.floor(i/totalSteps)][i%totalSteps].v[document.getElementById("switched").checked?"im":"re"] * scaler*10;
         // plane.geometry.vertices[i].y = 1;
     }
     // draw the complex numbers that cannot be displayed in 3D, as colors on a canvas and apply this canvas to the mesh
@@ -115,18 +137,27 @@ function display(e) {
     ctx.fillRect(0,0,c.width,c.height);
     for (var x = 0; x < totalSteps; x++) {
         for (var y = 0; y < totalSteps; y++) {
-            var tmp = HSVtoRGB(
-                !document.getElementById("switched").checked?
-                    math.percentage(e[0][y][x].v.im, e[1].im.btm,e[1].im.top)*0.9:
-                    math.percentage(e[0][y][x].v.re, e[1].re.btm,e[1].re.top)*0.9,
-                1,1
-            );
-            ctx.fillStyle = "rgb("+tmp.r+","+tmp.g+","+tmp.b+")";
+            if (document.getElementById("switched").checked) {
+                var hue = math.percentage(e[0][y][x].v.re, e[1].re.btm,e[1].re.top)*0.9;
+            }else {
+                var hue = math.percentage(e[0][y][x].v.im, e[1].im.btm,e[1].im.top)*0.9;
+            }
+
+            ctx.fillStyle = "hsl("+360*hue+",100%,50%)";
             ctx.fillRect(x,y,1,1);
         }
     }
     material.map = new THREE.CanvasTexture(c);
     material.map.needsUpdate = true;
+    // add a coordinate grid to the scene
+    gridX = new THREE.GridHelper( 100, to-from );
+    scene.add( gridX );
+    gridY = new THREE.GridHelper( 100, to-from );
+    gridY.rotateZ(-math.pi/2);
+    scene.add( gridY );
+    gridZ = new THREE.GridHelper( 100, to-from );
+    gridZ.rotateX(-math.pi/2);
+    scene.add( gridZ );
     // add the new mesh to the scene
     scene.add( plane );
 }
@@ -142,41 +173,14 @@ function resetScaler() {
     document.getElementById('scalerZ').value = document.getElementById('scalerShow').innerHTML = scaler = 1;
     renderButtonClicked();
 }
+function gridbutton() {
+    gridX.material.visible=document.getElementById("gridX").checked;
+    gridY.material.visible=document.getElementById("gridY").checked;
+    gridZ.material.visible=document.getElementById("gridZ").checked;
+}
 
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-function HSVtoRGB(h, s, v) {
-    /* accepts parameters
-     * h  Object = {h:x, s:y, v:z}
-     * OR
-     * h, s, v
-    */
-    //
-    // 0 <= h, s, v <= 1
-    //
-    var r, g, b, i, f, p, q, t;
-    if (arguments.length === 1) {
-        s = h.s, v = h.v, h = h.h;
-    }
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
-    }
-    return {
-        r: Math.round(r * 255),
-        g: Math.round(g * 255),
-        b: Math.round(b * 255)
-    };
 }
 
 // Fast Function switching
