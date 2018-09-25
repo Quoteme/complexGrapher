@@ -10,7 +10,7 @@ animate();
 function init() {
     camera = new THREE.OrthographicCamera( window.innerWidth / - orthoscaler, window.innerWidth / orthoscaler, window.innerHeight / orthoscaler, window.innerHeight / - orthoscaler, 1, 1000 )
     camera.position.z = 125;
-    camera.position.y = 75;
+    // camera.position.y = 75;
     scene = new THREE.Scene();
     //
     var geometry = new THREE.TorusGeometry( 1, 0.5, 8, 20 );
@@ -83,11 +83,17 @@ function evalFunction(f,p) {
             if (document.getElementById("restrictZ").checked) {
                 var rtop = parseFloat(document.getElementById("restrictTop").value);
                 var rbtm = parseFloat(document.getElementById("restrictBtm").value);
-                if (res.re > rtop || res.re < rbtm ) {
-                    res.re = 100*math.sign(res.re);
+                if (res.re > rtop) {
+                    res.re = rtop;
                 }
-                if (res.im > rtop || res.im < rbtm) {
-                    res.im = 100*math.sign(res.im);
+                if (res.re < rbtm) {
+                    res.re = rbtm;
+                }
+                if (res.im > rtop) {
+                    res.im = rtop;
+                }
+                if (res.im < rbtm) {
+                    res.im = rbtm;
                 }
             }
             // find highest and lowest points
@@ -166,7 +172,7 @@ function renderButtonClicked() {
     display(evalFunction(document.getElementById('f').value,'z'));
 }
 function scalerChanged() {
-    document.getElementById('scalerShow').innerHTML = scaler = math.pow(math.e,parseFloat(document.getElementById("scalerZ").value)/30)-0.9;
+    document.getElementById('scalerShow').innerHTML = scaler = parseFloat(document.getElementById("scalerZ").value);//math.pow(math.e,parseFloat(document.getElementById("scalerZ").value)/30)-0.9;
     renderButtonClicked();
 }
 function resetScaler() {
@@ -177,6 +183,15 @@ function gridbutton() {
     gridX.material.visible=document.getElementById("gridX").checked;
     gridY.material.visible=document.getElementById("gridY").checked;
     gridZ.material.visible=document.getElementById("gridZ").checked;
+}
+function expander() {
+    if (document.getElementById("collapseable").style.display == "") {
+        document.getElementById("collapseable").style.display = "none";
+        document.getElementById("expanderButton").innerHTML = "&gt";
+    }else {
+        document.getElementById("collapseable").style.display= "";
+        document.getElementById("expanderButton").innerHTML = "&lt;";
+    }
 }
 
 function rgbToHex(r, g, b) {
