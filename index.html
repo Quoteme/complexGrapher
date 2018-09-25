@@ -55,9 +55,12 @@
             <tr>
                 <td id="collapseable">
                     <span>f(z)=<input id="f" type="text" value="z^2"></span>
-                    <br>
-                    <button type="button" id="renderButton" onclick="renderButtonClicked();">render</button><br>
+                    <br><button type="button" id="renderButton" onclick="renderButtonClicked();">render</button><br>
                     <table>
+                        <tr>
+                            <td>fullscreen:</td>
+                            <td><input type="checkbox" onclick="fullscreen();" id="fullscreenCheckbox"></td>
+                        </tr>
                         <tr>
                             <td rowspan="3">range:</td>
                             <td><input type="number" id="from" value="-5">-from</td>

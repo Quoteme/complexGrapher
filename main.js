@@ -193,7 +193,24 @@ function expander() {
         document.getElementById("expanderButton").innerHTML = "&lt;";
     }
 }
-
+function fullscreen() {
+    if (document.fullscreenElement ||
+    document.mozFullScreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement ) {
+        document.webkitExitFullscreen();
+        document.mozCancelFullScreen();
+        document.msExitFullscreen();
+        document.exitFullscreen();
+        document.getElementById("fullscreenCheckbox").checked = false;
+    }else {
+        document.body.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        document.body.mozRequestFullScreen();
+        document.body.msRequestFullscreen();
+        document.body.requestFullscreen();
+        document.getElementById("fullscreenCheckbox").checked = true;
+    }
+}
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
