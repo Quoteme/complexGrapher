@@ -63,6 +63,12 @@ function evalFunction(f,p) {
     var results = new Array();
 
     // calculate all the results the function gives for each complex number as an input
+    function replaceAll(str, find, replace) {
+        function escapeRegExp(str) {
+            return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        }
+        return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+    }
     for (var i = 0; i < totalSteps; i++) {
         results[i] = new Array();
         for (var j = 0; j < totalSteps; j++) {
@@ -76,7 +82,8 @@ function evalFunction(f,p) {
             }else {
                 // functions that can be calculated using math.js are passed in here
                 // replace the parameter of the function passed in as "f" with a number
-                var tmp = f.replace(p,"("+ti+"+"+tj+"i"+")");
+                var tmp = replaceAll(f,p,"("+ti+"+"+tj+"i"+")")//.replace(p,"("+ti+"+"+tj+"i"+")");
+                console.log(tmp);
                 var res = math.eval(tmp);
             }
             // restrict the height of the graph, if the user defined so
