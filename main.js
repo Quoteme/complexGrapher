@@ -83,7 +83,6 @@ function evalFunction(f,p) {
                 // functions that can be calculated using math.js are passed in here
                 // replace the parameter of the function passed in as "f" with a number
                 var tmp = replaceAll(f,p,"("+ti+"+"+tj+"i"+")")//.replace(p,"("+ti+"+"+tj+"i"+")");
-                console.log(tmp);
                 var res = math.eval(tmp);
             }
             // restrict the height of the graph, if the user defined so
@@ -217,6 +216,14 @@ function fullscreen() {
         document.body.requestFullscreen();
         document.getElementById("fullscreenCheckbox").checked = true;
     }
+}
+function resetcam() {
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.position.z = 125;
+    camera.rotation.x = 0;
+    camera.rotation.y = 0;
+    camera.rotation.z = 0;
 }
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
