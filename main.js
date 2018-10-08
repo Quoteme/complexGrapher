@@ -119,6 +119,7 @@ function evalFunction(f,p) {
     return [results,extremes];
 }
 function display(e) {
+    updateImaginaryScale(e[1]);
     console.log("Maxima & Minima: ",e[1]);
     var from = parseFloat(document.getElementById("from").value);
     var to = parseFloat(document.getElementById("to").value);
@@ -173,7 +174,16 @@ function display(e) {
     // add the new mesh to the scene
     scene.add( plane );
 }
-
+function updateImaginaryScale(pExtremes) {
+    // top hue is 1*0.9 and bottom hue is 0*0.9
+    if (document.getElementById("switched").checked) {
+        document.getElementsByClassName("top")[0].innerHTML = pExtremes.re.top;
+        document.getElementsByClassName("btm")[0].innerHTML = pExtremes.re.btm;
+    }else {
+        document.getElementsByClassName("top")[0].innerHTML = pExtremes.im.top;
+        document.getElementsByClassName("btm")[0].innerHTML = pExtremes.im.btm;
+    }
+}
 function renderButtonClicked() {
     display(evalFunction(document.getElementById('f').value,'z'));
 }
