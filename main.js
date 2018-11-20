@@ -60,31 +60,34 @@ function evalFunction(f,p) {
     var step = parseFloat(document.getElementById("step").value);
     var totalSteps = math.ceil((to-from)/step);
 
+	// construct a parse tree for the expression
+	var node = math.parse(f);
+	// create a Latex representation of this string and display it using mathjax
+	var mjout = document.getElementById("mathjaxOut");
+	mjout.innerHTML="$"+node.toTex()+"$";
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub,mjout]);
+	var code = node.compile();
+
     var results = new Array();
 
     // calculate all the results the function gives for each complex number as an input
-    function replaceAll(str, find, replace) {
-        function escapeRegExp(str) {
-            return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-        }
-        return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-    }
     for (var i = 0; i < totalSteps; i++) {
         results[i] = new Array();
         for (var j = 0; j < totalSteps; j++) {
             var ti = i*step+from+step;
             var tj = j*step+from+step;
             // check if the function is a "special" function, which uses functions presently not availeable in math.js
-            if (f.indexOf("riemannZeta")!=-1) {
-                var tmp = math.riemannZeta(math.complex(ti,tj),100)
-                var res = tmp;
-                // console.log(math.complex(ti,tj),res);
-            }else {
-                // functions that can be calculated using math.js are passed in here
-                // replace the parameter of the function passed in as "f" with a number
-                var tmp = replaceAll(f,p,"("+ti+"+"+tj+"i"+")")//.replace(p,"("+ti+"+"+tj+"i"+")");
-                var res = math.eval(tmp);
-            }
+            // functions that can be calculated using math.js are passed in here
+            // replace the parameter of the function passed in as "f" with a number
+			let scope = {x:ti,y:tj,z:math.complex(ti,tj)};
+			var res = code.eval(scope);
+			if(res==true){
+				res = math.complex(1,25);
+			}else if(res==false){
+				res = math.complex(0,0);
+			}else if(res.isComplex!=true){
+				res = math.complex(res,1);
+			}
             // restrict the height of the graph, if the user defined so
             if (document.getElementById("restrictZ").checked) {
                 var rtop = parseFloat(document.getElementById("restrictTop").value);

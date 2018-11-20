@@ -49,6 +49,11 @@
                 background-color: #fff;
                 border: 1px solid black;
             }
+			#mathjaxOut{
+				background-color: #ffffff;
+				padding: 4px;
+				border: 1px solid black
+			}
             /* Portrait */
             @media screen and (orientation:portrait) {
                 #colorVisualizer{
@@ -84,6 +89,15 @@
                 }
             }
         </style>
+		<script type="text/x-mathjax-config">
+  			MathJax.Hub.Config({
+    			extensions: ["tex2jax.js"],
+    			jax: ["input/TeX","output/HTML-CSS"],
+    			tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  			});
+		</script>
+
+		<script type="text/javascript" src="MathJax/MathJax.js"></script>
         <script src="math.min.js" charset="utf-8"></script>
         <script src="math_extensions.js" charset="utf-8"></script>
         <script src="three.min.js" charset="utf-8"></script>
@@ -94,7 +108,10 @@
             <tr>
                 <td id="collapseable">
                     <span>f(z)=<input id="f" type="text" value="z^2"></span>
-                    <br><button type="button" id="renderButton" onclick="renderButtonClicked();">render</button><br>
+					<br>
+					<div id="mathjaxOut">
+					</div>
+                    <button type="button" id="renderButton" onclick="renderButtonClicked();">render</button><br>
                     <table>
                         <tr>
                             <td>fullscreen:</td>
@@ -147,6 +164,20 @@
                         <tr>
                             <td>Z: <input type="checkbox" id="gridZ" onclick="gridbutton();" checked></td>
                         </tr>
+						<tr>
+							<td>function references</td>
+							<td><a href="mathjs_function_references.html">here</a></td>
+						</tr>
+						<tr>
+							<td rowspan="3">variables</td>
+							<td>z: x+iy</td>
+						</tr>
+						<tr>
+							<td>x: Re(z)</td>
+						</tr>
+						<tr>
+							<td>y: Im(z)</td>
+						</tr>
                     </table>
                     <br>
                     <i>2018.08 - Luca Leon Happel</i>
