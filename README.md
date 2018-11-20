@@ -5,6 +5,8 @@
 a simple complex function grapher to visualize your functions right in your browser. (v.1.0.1)
 Now with Android support!
 
+Android version: https://build.phonegap.com/apps/3314142/download/android
+
 ![demo2.gif](demo2.gif)
 ![demo.gif](demo.gif)
 
