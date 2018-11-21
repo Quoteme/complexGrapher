@@ -66,6 +66,7 @@ function evalFunction(f,p) {
 	var mjout = document.getElementById("mathjaxOut");
 	mjout.innerHTML="$"+node.toTex()+"$";
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub,mjout]);
+	// compile the parse tree
 	var code = node.compile();
 
     var results = new Array();
@@ -76,9 +77,6 @@ function evalFunction(f,p) {
         for (var j = 0; j < totalSteps; j++) {
             var ti = i*step+from+step;
             var tj = j*step+from+step;
-            // check if the function is a "special" function, which uses functions presently not availeable in math.js
-            // functions that can be calculated using math.js are passed in here
-            // replace the parameter of the function passed in as "f" with a number
 			let scope = {x:ti,y:tj,z:math.complex(ti,tj)};
 			var res = code.eval(scope);
 			if(res==true){
@@ -122,6 +120,9 @@ function evalFunction(f,p) {
     return [results,extremes];
 }
 function display(e) {
+	var width = e[0].length;
+	var height = e[0][0].length;
+	var scale = 5;
     updateImaginaryScale(e[1]);
     console.log("Maxima & Minima: ",e[1]);
     var from = parseFloat(document.getElementById("from").value);
@@ -136,7 +137,7 @@ function display(e) {
     scene.remove(gridZ);
     //
     // create a new mesh to plot the function to
-    var geometry = new THREE.PlaneGeometry( 100, 100, totalSteps-1, totalSteps-1);
+    var geometry = new THREE.PlaneGeometry( scale*(width-2), scale*(height-2), width-2, height-2);
     var material = new THREE.MeshBasicMaterial( {side: THREE.DoubleSide, /*wireframe: true*/} );
     plane = new THREE.Mesh( geometry, material );
     plane.rotateX(-math.pi/2);
@@ -145,11 +146,12 @@ function display(e) {
     // move the plane vertecies depending on their complex values
     for (var i = 0; i < plane.geometry.vertices.length; i++) {
         // console.log(i, math.floor(i/totalSteps), i%totalSteps, totalSteps);
-        plane.geometry.vertices[i].z = e[0][math.floor(i/totalSteps)][i%totalSteps].v[document.getElementById("switched").checked?"im":"re"] * scaler*10;
-        // plane.geometry.vertices[i].y = 1;
+		var part = document.getElementById("switched").checked?"im":"re"
+        plane.geometry.vertices[i].z = e[0][math.floor(i/totalSteps)][i%totalSteps].v[part] * (scale*(height-2)/(to-from));
     }
     // draw the complex numbers that cannot be displayed in 3D, as colors on a canvas and apply this canvas to the mesh
-    c.width = c.height = totalSteps;
+    c.width = width-2;
+	c.height = height-2;
     ctx.fillRect(0,0,c.width,c.height);
     for (var x = 0; x < totalSteps; x++) {
         for (var y = 0; y < totalSteps; y++) {
@@ -166,12 +168,12 @@ function display(e) {
     material.map = new THREE.CanvasTexture(c);
     material.map.needsUpdate = true;
     // add a coordinate grid to the scene
-    gridX = new THREE.GridHelper( 100, to-from );
+    gridX = new THREE.GridHelper( scale*(width-2), to-from );
     scene.add( gridX );
-    gridY = new THREE.GridHelper( 100, to-from );
+    gridY = new THREE.GridHelper( scale*(height-2), to-from );
     gridY.rotateZ(-math.pi/2);
     scene.add( gridY );
-    gridZ = new THREE.GridHelper( 100, to-from );
+    gridZ = new THREE.GridHelper( scale*(height-2), to-from );
     gridZ.rotateX(-math.pi/2);
     scene.add( gridZ );
     // add the new mesh to the scene
