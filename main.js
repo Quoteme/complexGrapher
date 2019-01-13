@@ -77,6 +77,7 @@ function evalFunction(f,p) {
         for (var j = 0; j < totalSteps; j++) {
             var ti = i*step+from+step;
             var tj = j*step+from+step;
+			console.log(ti,tj);
 			let scope = {x:ti,y:tj,z:math.complex(ti,tj)};
 			var res = code.eval(scope);
 			if(res==true){
