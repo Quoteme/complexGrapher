@@ -6,7 +6,7 @@ a simple complex function grapher to visualize your functions right in your brow
 Now with Android support!
 
 ---
-Android version: https://build.phonegap.com/apps/3314142/download/android
+Android version: https://drive.google.com/drive/folders/1rohnm9aAzy-R-VWRhRd2ivCYQQW102b1
 
 ---
 
