@@ -7,7 +7,7 @@ Now with Android support!
 
 ---
 
-mobile versions: [https://build.phonegap.com/apps/3432609/share](https://build.phonegap.com/apps/3432609/share)
+mobile versions: [https://build.phonegap.com/apps/3705449/share](https://build.phonegap.com/apps/3705449/share)
 
 ---
 
