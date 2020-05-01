@@ -42,7 +42,7 @@
             }
             #expanderButton{
                 background-color: #eee;
-                color: #454545
+                color: #454545;
                 border: 1px solid #eee;
             }
             #colorVisualizer{
@@ -61,7 +61,16 @@
                     left: 0;
                     bottom: 0;
                     width: 100%;
-                    background-image: linear-gradient(to right, hsl(0,100%,50%), hsl(162,100%,50%), hsl(324,100%,50%));
+                    background-image: linear-gradient(to right,
+						hsl(0,100%,50%),
+						hsl(50,100%,50%),
+						hsl(100,100%,50%),
+						hsl(150,100%,50%),
+						hsl(200,100%,50%),
+						hsl(250,100%,50%),
+						hsl(300,100%,50%),
+						hsl(359,100%,50%)
+					);
                 }
                 #colorVisualizer .top{
                     float: right;
@@ -77,7 +86,16 @@
                     top: 25%;
                     height: 50vh;
                     width: 40px;
-                    background-image: linear-gradient(hsl(0,100%,50%), hsl(162,100%,50%), hsl(324,100%,50%));
+                    background-image: linear-gradient(
+						hsl(0,100%,50%),
+						hsl(50,100%,50%),
+						hsl(100,100%,50%),
+						hsl(150,100%,50%),
+						hsl(200,100%,50%),
+						hsl(250,100%,50%),
+						hsl(300,100%,50%),
+						hsl(359,100%,50%)
+					);
                 }
                 #colorVisualizer span{
                     display: block;
@@ -150,6 +168,10 @@
                         <tr>
                             <td>switch imaginary<br>and real</td>
                             <td><input id="switched" type="checkbox"></input></td>
+                        </tr>
+						<tr>
+							<td>use argument<br>and magnitude</td>
+                            <td><input id="argumentmagnitude" type="checkbox"></input></td>
                         </tr>
                         <tr>
                             <td>camera</td>

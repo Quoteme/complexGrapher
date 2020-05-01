@@ -11,8 +11,8 @@ mobile versions: [https://build.phonegap.com/apps/3705449/share](https://build.p
 
 ---
 
-![demo2.gif](https://i.imgur.com/efo8nUM.gif)
-![demo.gif](https://i.imgur.com/V0X41ct.gif)
+![demo2.gif](https://i.imgur.com/MHf3Ltb.gif)
+![demo.gif](https://i.imgur.com/cfwO3so.gif)
 
 This project is written in ~300 lines of javascript code.
 [THREE.js](https://threejs.org/) is used for 3d plotting and [math.js](http://mathjs.org) is used for most of the heavy lifting.

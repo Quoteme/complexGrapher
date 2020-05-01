@@ -59,6 +59,10 @@ function evalFunction(f,p) {
     var to = parseFloat(document.getElementById("to").value);
     var step = parseFloat(document.getElementById("step").value);
     var totalSteps = math.ceil((to-from)/step);
+	// use polar coordinates instead of cartesian ones,
+	// if this was specified in the options
+	var polar = document.getElementById("argumentmagnitude").checked;
+
 
 	// construct a parse tree for the expression
 	var node = math.parse(f);
@@ -80,12 +84,16 @@ function evalFunction(f,p) {
 			console.log(ti,tj);
 			let scope = {x:ti,y:tj,z:math.complex(ti,tj)};
 			var res = code.eval(scope);
-			if(res==true){
-				res = math.complex(1,25);
-			}else if(res==false){
-				res = math.complex(0,0);
-			}else if(res.isComplex!=true){
-				res = math.complex(res,1);
+			if(polar){
+				[res.re, res.im] = [math.abs(res), math.arg(res)];
+			}else{
+				if(res==true){
+					res = math.complex(1,25);
+				}else if(res==false){
+					res = math.complex(0,0);
+				}else if(res.isComplex!=true){
+					res = math.complex(res,1);
+				}
 			}
             // restrict the height of the graph, if the user defined so
             if (document.getElementById("restrictZ").checked) {
@@ -146,7 +154,6 @@ function display(e) {
     //
     // move the plane vertecies depending on their complex values
     for (var i = 0; i < plane.geometry.vertices.length; i++) {
-        // console.log(i, math.floor(i/totalSteps), i%totalSteps, totalSteps);
 		var part = document.getElementById("switched").checked?"im":"re"
         plane.geometry.vertices[i].z = e[0][math.floor(i/totalSteps)][i%totalSteps].v[part] * (scale*(height-2)/(to-from));
     }
