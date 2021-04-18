@@ -67,9 +67,10 @@ function evalFunction(f,p) {
 	// construct a parse tree for the expression
 	var node = math.parse(f);
 	// create a Latex representation of this string and display it using mathjax
-	var mjout = document.getElementById("mathjaxOut");
-	mjout.innerHTML="$"+node.toTex()+"$";
-	MathJax.Hub.Queue(["Typeset",MathJax.Hub,mjout]);
+	// var mjout = document.getElementById("mathjaxOut");
+	// mjout.innerHTML="$"+node.toTex()+"$";
+	// Mathjax is ignored because of CORS issue
+	// MathJax.Hub.Queue(["Typeset",MathJax.Hub,mjout]);
 	// compile the parse tree
 	var code = node.compile();
 
