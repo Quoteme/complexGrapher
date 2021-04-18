@@ -1,6 +1,6 @@
 # ComplexGrapher
 
-#### [online version](http://htmlpreview.github.io/?https://github.com/Quoteme/complexGrapher/blob/master/index.html)
+#### [online version](https://quoteme.github.io/complexGrapher/index.html)
 
 a simple complex function grapher to visualize your functions right in your browser. (v.1.0.1)
 Now with Android support!
